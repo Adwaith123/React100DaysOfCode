@@ -64,6 +64,8 @@ function Header() {
     </header>
   );
 }
+
+//-------------Conditional Rendering-------------
 function Menu() {
   const pizzas = pizzaData;
   // const pizzas = [];
