@@ -14,14 +14,14 @@ export default function App() {
 
   Note : useState(1) --> Here 1 is the default value
   */
-  const [step, setStep] = useState(1); //Here setStep is a function
+  const [step, setStep] = useState(1); //Here setStep is a setter function , we should always update state using setter function
 
   /*
   In the above linke of code we did a destructuring of the array of useState otherwise it should look like
   const step = useState(1)[0];
   const setstep = useState(1)[1];
 
-  Here setStep is a setter function , we should always update state using setter function
+  
 */
   /*
   Use state function is called as a hook in react ,we can identify it by the word "use" eg:useState,useReducer etc...
