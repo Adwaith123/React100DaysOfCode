@@ -1,152 +1,82 @@
-import { useState } from "react";
-
-const messages = [
-  "Learn React ⚛️",
-  "Apply for jobs 💼",
-  "Invest your new income 🤑",
-]; // This data dosent depend on any component
-
-export default function App() {
-  const [step, setStep] = useState(1); //Here setStep is a function
-  const [test, setTest] = useState({ name: "Adwaith Rajesh" });
-  const [isOpen, setIsOpen] = useState(true); // opening or closeing is having boolean values
-  /*
-  In the above linke of code we did a destructuring of the array of useState otherwise it should look like
-  const step = useState(1)[0];
-  const setstep = useState(1)[1];
-
-  Here setStep is a setter function , we should always update state using setter function
-*/
-  /*
-  Use state function is called as a hook in react ,we can identify it by the word "use" eg:useState,useReducer etc...
-   
-  Rules
-  1.Hooks ==> {const [step, setStep] = useState(1);} should always use on top of the component just below its declaration
- 2.Always use state as immutable in react
-  */
-
-  function handlePrevious() {
-    //----------Modern state updation method-----------
-    if (step > 1) setStep((currstep) => currstep - 1);
-    /* To overcome the dfficulty in updating states based on state , here we can use a callback function {works by passing the currest_step/current state to a funcion and thereby updating it }*/
-    setTest({ name: "Adwaith Rajesh" });
-  }
-  function handleNext() {
-    if (step < 3) {
-      //----------Modern state updation method-----------
-      setStep((currstep) => currstep + 1);
-      /*
-      setStep(step+1) setStep(step + 1); We do not update state based on the current state , the below code rectify the issues
-      */
-      /* 
-      setStep((currstep) => currstep + 1);
-      setStep((currstep) => currstep + 1);
-      */
-      setTest({ name: "Tuttu" });
-    }
-  }
-  return (
-    /* Below is the best usecase for React fragments , beacause we dont want apiece of jsx  to return two elements , then the fragmnnt is great for that*/
-    <>
-      {/* Defines an inline handler function */}
-      <button
-        className="close"
-        //----------Modern state updation method-----------
-        onClick={() => setIsOpen((currstate) => !currstate)}
-        /*We can do this type of state updation if we want to update a state based on current state  */
-      >
-        &times;
-      </button>
-      {isOpen && (
-        <div className="steps">
-          <div className="numbers">
-            <div className={step >= 1 ? "active" : ""}>1</div>
-            <div className={step >= 2 ? "active" : ""}>2</div>
-            <div className={step >= 3 ? "active" : ""}>3</div>
-          </div>
-          <p className="message">
-            Step {step}: {messages[step - 1]} {test.name}
-          </p>
-          <div className="buttons">
-            <button
-              style={{ backgroundColor: "#7950f2", color: "#fff" }}
-              onClick={handlePrevious}
-            >
-              Previous
-            </button>
-            <button
-              style={{ backgroundColor: "#7950f2", color: "#fff" }}
-              onClick={() => handleNext()}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-// Note : State is like a memory of the compnent , even if we re render the component , the data or states does not changes
-
-/*
-import { useState } from "react";
+const initialItems = [
+  { id: 1, description: "Passports", quantity: 2, packed: false },
+  { id: 2, description: "Socks", quantity: 12, packed: true },
+  { id: 3, description: "Charger", quantity: 1, packed: false },
+];
 
 export default function App() {
   return (
-    <div
-      style={{
-        fontFamily: "sans-serif",
-        textAlign: "center",
-      }}
-    >
-      <Counter />
+    <div className="app">
+      <Logo />
+      <Form />
+      <PackingList />
+      <Stats />
     </div>
   );
 }
 
-function Counter() {
-  const [step, setStep] = useState(1);
-  const [count, setCount] = useState(0);
+function Logo() {
+  return <h1>🌴 Far Away 💼 </h1>;
+}
+function Form() {
+  //Writing Event Handlers , adn disabling default behaviour
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
 
   return (
-    <>
-      <div>
-        <button onClick={() => (step > 1 ? setStep((step) => step - 1) : null)}>
-          -
-        </button>
-        <span> Step:{step} </span>
-        <button onClick={() => setStep((step) => step + 1)}>+</button>
-      </div>
-      <div>
-        <button onClick={() => setCount((count) => count - step)}>-</button>
-        <span>Count:{count} </span>
-        <button onClick={() => setCount((count) => count + step)}>+</button>
-      </div>
-      <Message step={step} count={count} date="date" />
-    </>
+    <form className="add-form" onSubmit={handleSubmit}>
+      {/* Submit handlers on form */}
+      <h3>What do you need , for your 😍trip </h3>
+      <select>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input type="text" placeholder="Item...." />
+      <button>Add</button>
+    </form>
   );
 }
-
-function Message({ step, count }) {
-  const date = new Date();
-  date.setDate(date.getDate() + count); // Get date Out put a number here for example ouput todays date if july 21 it hold 21
+function PackingList() {
   return (
-    <div>
-      <p>
-        <span>
-          {count === 0
-            ? "Today is "
-            : count > 0
-            ? `${count} days from today is `
-            : `${Math.abs(count)} day ago was `}
-        </span>
-        <span>{date.toDateString()}</span>
-      </p>
-      <p>{`Current step is : ${step} and Count is : ${count}`}</p>
+    <div className="list">
+      <ul>
+        {initialItems.map((item) => (
+          <Item item={item} key={item.id} /> // Passing item as props to Item compoenent
+        ))}
+      </ul>
     </div>
   );
 }
 
-// Note : setDate(), getDate() imortant method when it comes to dates
+function Item({ item }) {
+  return (
+    <li>
+      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
+        {/* if not returing empty object */}
+        {item.quantity} {item.description}
+      </span>
+      <button>❌</button>
+    </li>
+  );
+}
+function Stats() {
+  return (
+    <footer className="stats">
+      <em>You have X items on your list , and you already packed X (X%)</em>
+    </footer>
+  );
+}
 
-*/
+// Short cut for creating n rray of our desired size
+
+/*<select>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select> */
